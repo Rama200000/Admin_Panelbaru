@@ -4,13 +4,30 @@
 -- =============================================
 
 -- =============================================
--- CARA MENGGUNAKAN:
+-- CARA SETUP DATABASE DAN MENJALANKAN WEB:
 -- =============================================
--- 1. Buka phpMyAdmin di browser: http://localhost/phpmyadmin
--- 2. Klik tab "SQL" di menu atas
--- 3. Copy dan paste seluruh isi file ini
--- 4. Klik tombol "Go" atau "Kirim"
--- 5. Database dan semua tabel akan otomatis dibuat
+-- 1. Pastikan XAMPP sudah running (Apache & MySQL)
+-- 2. Buka phpMyAdmin di browser: http://localhost/phpmyadmin
+-- 3. Klik tab "SQL" di menu atas
+-- 4. Copy dan paste seluruh isi file ini
+-- 5. Klik tombol "Go" atau "Kirim"
+-- 6. Database dan semua tabel akan otomatis dibuat
+-- 
+-- SETELAH DATABASE SIAP:
+-- 7. Buka terminal/cmd di folder project
+-- 8. Jalankan: composer install (jika belum install dependencies)
+-- 9. Copy file .env.example menjadi .env
+-- 10. Edit .env, sesuaikan konfigurasi database:
+--     DB_CONNECTION=mysql
+--     DB_HOST=127.0.0.1
+--     DB_PORT=3306
+--     DB_DATABASE=pelaporan_akademik
+--     DB_USERNAME=root
+--     DB_PASSWORD=
+-- 11. Jalankan: php artisan key:generate
+-- 12. Jalankan: php artisan serve
+-- 13. Buka browser: http://127.0.0.1:8000
+-- 14. Login dengan salah satu akun admin di bawah
 -- =============================================
 
 -- Drop database jika sudah ada (HATI-HATI: akan menghapus semua data!)
@@ -228,14 +245,14 @@ CREATE TABLE IF NOT EXISTS `reports` (
 
 -- =============================================
 -- INSERT DATA AWAL: Categories
--- 6 kategori pelanggaran default
+-- 6 kategori pelanggaran akademik
 -- =============================================
 INSERT INTO `categories` (`id`, `name`, `icon`, `description`, `created_at`, `updated_at`) VALUES
-(1, 'Kekerasan', 'fas fa-fist-raised', 'Laporan terkait tindakan kekerasan fisik atau verbal', NOW(), NOW()),
-(2, 'Bullying', 'fas fa-user-slash', 'Laporan terkait perundungan atau intimidasi', NOW(), NOW()),
-(3, 'Pelanggaran Tata Tertib', 'fas fa-exclamation-triangle', 'Laporan pelanggaran aturan dan tata tertib sekolah', NOW(), NOW()),
-(4, 'Penyalahgunaan Narkoba', 'fas fa-pills', 'Laporan terkait penyalahgunaan obat-obatan terlarang', NOW(), NOW()),
-(5, 'Pencurian', 'fas fa-mask', 'Laporan kehilangan atau pencurian barang', NOW(), NOW()),
+(1, 'Plagiarisme', 'fas fa-copy', 'Laporan terkait plagiarisme atau menjiplak karya orang lain', NOW(), NOW()),
+(2, 'Menyontek', 'fas fa-user-secret', 'Laporan terkait kecurangan saat ujian atau tugas', NOW(), NOW()),
+(3, 'Titip Absen', 'fas fa-user-check', 'Laporan terkait penitipan absensi atau kehadiran palsu', NOW(), NOW()),
+(4, 'Kecurangan Ujian', 'fas fa-exclamation-triangle', 'Laporan terkait kecurangan dalam pelaksanaan ujian', NOW(), NOW()),
+(5, 'Pemalsuan Data', 'fas fa-file-signature', 'Laporan terkait pemalsuan dokumen atau data akademik', NOW(), NOW()),
 (6, 'Lainnya', 'fas fa-ellipsis-h', 'Laporan pelanggaran atau kejadian lainnya', NOW(), NOW());
 
 -- =============================================
@@ -259,8 +276,20 @@ INSERT INTO `migrations` (`migration`, `batch`) VALUES
 
 -- =============================================
 -- SELESAI!
+-- Database siap digunakan
 -- =============================================
 SELECT 'Database pelaporan_akademik berhasil dibuat!' as Status;
+SELECT COUNT(*) as 'Total Admins' FROM `admins`;
 SELECT COUNT(*) as 'Total Categories' FROM `categories`;
 SELECT COUNT(*) as 'Total Users' FROM `users`;
 SELECT COUNT(*) as 'Total Reports' FROM `reports`;
+
+-- =============================================
+-- LANGKAH SELANJUTNYA:
+-- =============================================
+-- 1. Tutup phpMyAdmin
+-- 2. Setup file .env di project Laravel
+-- 3. Jalankan: php artisan serve
+-- 4. Akses: http://127.0.0.1:8000
+-- 5. Login dengan akun Super Admin atau Admin di atas
+-- =============================================
