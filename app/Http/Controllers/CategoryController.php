@@ -3,15 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Report;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function index()
-    {
-        $categories = Category::withCount('reports')->get();
-        return view('categories.index', compact('categories'));
-    }
+public function index()
+{
+$admin = Auth::guard('admin')->user();
+
+$categories = Category::latest()->get();
+
+return view('categories.index', compact('categories', 'admin'   ));
+}
 
     public function create()
     {

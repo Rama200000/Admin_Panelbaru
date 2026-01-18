@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Report;
@@ -13,6 +13,91 @@ use Illuminate\Support\Facades\Storage;
 class ReportApiController extends Controller
 {
     // Get all categories
+    public function index()
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Unauthenticated'
+            ], 401);
+        }
+
+        $reports = Report::where('user_id', $user->id)
+            ->with('category')
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $reports
+        ]);
+    }
+
+    // =========================
+    // POST REPORT
+    // =========================
+    public function store(Request $request)
+    {
+        $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'title' => 'required|string',
+            'description' => 'required|string',
+            'location' => 'nullable|string',
+            'media.*' => 'file|mimes:jpg,jpeg,png,mp4,mov|max:10240',
+        ]);
+
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Unauthenticated'
+            ], 401);
+        }
+
+        $media = [];
+
+        if ($request->hasFile('media')) {
+            foreach ($request->file('media') as $file) {
+                $media[] = $file->store('reports', 'public');
+            }
+        }
+
+        $report = Report::create([
+            'user_id' => $user->id,
+            'category_id' => $request->category_id,
+            'title' => $request->title,
+            'description' => $request->description,
+            'location' => $request->location,
+            'media' => $media,
+            'status' => 'Diproses',
+            'is_verified' => false,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'data' => $report
+        ], 201);
+    }
+
+    // =========================
+    // GET DETAIL REPORT
+    // =========================
+    public function show($id)
+    {
+        $user = auth()->user();
+
+        $report = Report::where('id', $id)
+            ->where('user_id', $user->id)
+            ->with('category')
+            ->firstOrFail();
+
+        return response()->json([
+            'success' => true,
+            'data' => $report
+        ]);
+    }
+
     public function getCategories()
     {
         $categories = Category::all();

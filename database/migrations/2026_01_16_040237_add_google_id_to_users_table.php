@@ -9,18 +9,18 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-   public function up(): void
+    public function up(): void
 {
     Schema::table('users', function (Blueprint $table) {
-        // Menambahkan kolom is_blocked setelah password
-        $table->boolean('is_blocked')->default(0)->after('password');
+        // Menambahkan kolom google_id setelah id utama
+        $table->string('google_id')->nullable()->after('id');
     });
 }
 
 public function down(): void
 {
     Schema::table('users', function (Blueprint $table) {
-        $table->dropColumn('is_blocked');
+        $table->dropColumn('google_id');
     });
 }
 };

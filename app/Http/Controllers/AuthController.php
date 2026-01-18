@@ -2,63 +2,59 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Admin;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
     public function showLogin()
     {
-        // Redirect if already logged in
-        if (session()->has('admin_id')) {
-            return redirect()->route('dashboard');
-        }
-        
         return view('auth.login');
     }
 
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|min:6',
+        $credentials = $request->validate([
+            'email'    => 'required|email',
+            'password' => 'required'
         ]);
 
-        $admin = Admin::where('email', $request->email)->first();
+        $admin = Admin::where('email', $credentials['email'])->first();
 
-        if (!$admin) {
-            return back()->with('error', 'Email tidak ditemukan!')->withInput();
+        if (!$admin || !Hash::check($credentials['password'], $admin->password)) {
+            return back()->withErrors([
+                'email' => 'Email atau password salah'
+            ]);
         }
 
-        if (!$admin->is_active) {
-            return back()->with('error', 'Akun Anda tidak aktif! Hubungi administrator.')->withInput();
+        if ($admin->is_active == 0) {
+            return back()->withErrors([
+                'email' => 'Akun admin nonaktif'
+            ]);
         }
 
-        if (!Hash::check($request->password, $admin->password)) {
-            return back()->with('error', 'Password salah!')->withInput();
-        }
+        // LOGIN
+        Auth::guard('admin')->login($admin);
 
-        // Update last login
-        $admin->update(['last_login' => now()]);
-
-        // Set session
+        // 🔥 INI YANG PENTING (BEDAIN ADMIN & SUPER ADMIN)
         session([
-            'admin_id' => $admin->id,
+            'admin_id'   => $admin->id,
             'admin_name' => $admin->name,
-            'admin_email' => $admin->email,
-            'admin_role' => $admin->role,
+            'admin_role' => $admin->role, // admin | super_admin
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Selamat datang, ' . $admin->name . '!');
+        return redirect()->route('dashboard');
     }
 
     public function logout(Request $request)
     {
-        // Clear session
-        $request->session()->flush();
-        $request->session()->regenerate();
+        Auth::guard('admin')->logout();
 
-        return redirect()->route('login')->with('success', 'Anda telah logout!');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/login');
     }
 }
