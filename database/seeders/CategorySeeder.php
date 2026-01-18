@@ -14,29 +14,29 @@ class CategorySeeder extends Seeder
     {
         $categories = [
             [
-                'name' => 'Kekerasan',
-                'icon' => 'fas fa-fist-raised',
-                'description' => 'Laporan terkait tindakan kekerasan fisik atau verbal'
+                'name' => 'Plagiarisme',
+                'icon' => 'fas fa-copy',
+                'description' => 'Laporan terkait plagiarisme atau menjiplak karya orang lain'
             ],
             [
-                'name' => 'Bullying',
-                'icon' => 'fas fa-user-slash',
-                'description' => 'Laporan terkait perundungan atau intimidasi'
+                'name' => 'Menyontek',
+                'icon' => 'fas fa-user-secret',
+                'description' => 'Laporan terkait kecurangan saat ujian atau tugas'
             ],
             [
-                'name' => 'Pelanggaran Tata Tertib',
+                'name' => 'Titip Absen',
+                'icon' => 'fas fa-user-check',
+                'description' => 'Laporan terkait penitipan absensi atau kehadiran palsu'
+            ],
+            [
+                'name' => 'Kecurangan Ujian',
                 'icon' => 'fas fa-exclamation-triangle',
-                'description' => 'Laporan pelanggaran aturan dan tata tertib sekolah'
+                'description' => 'Laporan terkait kecurangan dalam pelaksanaan ujian'
             ],
             [
-                'name' => 'Penyalahgunaan Narkoba',
-                'icon' => 'fas fa-pills',
-                'description' => 'Laporan terkait penyalahgunaan obat-obatan terlarang'
-            ],
-            [
-                'name' => 'Pencurian',
-                'icon' => 'fas fa-mask',
-                'description' => 'Laporan kehilangan atau pencurian barang'
+                'name' => 'Pemalsuan Data',
+                'icon' => 'fas fa-file-signature',
+                'description' => 'Laporan terkait pemalsuan dokumen atau data akademik'
             ],
             [
                 'name' => 'Lainnya',

@@ -236,6 +236,12 @@
             </li>
             @if(session('admin_role') == 'super_admin')
                 <li>
+                    <a href="{{ route('admins.index') }}" class="{{ request()->routeIs('admins.*') ? 'active' : '' }}">
+                        <i class="fas fa-user-shield"></i>
+                        <span>Manajemen Admin</span>
+                    </a>
+                </li>
+                <li>
                     <a href="{{ route('users.index') }}" class="{{ request()->routeIs('users.*') ? 'active' : '' }}">
                         <i class="fas fa-users"></i>
                         <span>Manajemen Pengguna</span>

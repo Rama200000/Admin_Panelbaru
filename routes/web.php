@@ -55,6 +55,17 @@ Route::middleware(['admin.auth'])->group(function () {
         Route::put('/update-password', [ProfileController::class, 'updatePassword'])->name('update-password');
     });
 
+    // Admins routes (Hanya Super Admin)
+    Route::prefix('admins')->name('admins.')->middleware('super.admin')->group(function () {
+        Route::get('/', [\App\Http\Controllers\AdminController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\AdminController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\AdminController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [\App\Http\Controllers\AdminController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [\App\Http\Controllers\AdminController::class, 'update'])->name('update');
+        Route::delete('/{id}', [\App\Http\Controllers\AdminController::class, 'destroy'])->name('destroy');
+        Route::patch('/{id}/toggle-status', [\App\Http\Controllers\AdminController::class, 'toggleStatus'])->name('toggle-status');
+    });
+
     // Users routes (Hanya Super Admin)
     Route::prefix('users')->name('users.')->middleware('super.admin')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
